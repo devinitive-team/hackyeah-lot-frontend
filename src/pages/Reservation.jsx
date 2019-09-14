@@ -10,7 +10,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Col from 'react-bootstrap/Col';
 
 import MainColumn from '../components/MainColumn';
-import DatePicker from '../components/DatePicker';
 
 const schema = yup.object({
   firstName: yup.string().required(),
@@ -47,6 +46,7 @@ const ReservationForm = () => {
           values,
           touched,
           isValid,
+          setFieldValue,
           errors,
         }) => (
           <Form onSubmit={handleSubmit}>

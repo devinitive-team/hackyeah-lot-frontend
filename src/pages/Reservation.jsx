@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Formik, Field } from 'formik';
 import Select from 'react-select';
 import * as yup from 'yup';
+import queryString from 'query-string';
 
 import renameProp from '../utils/renameProp';
 
@@ -70,7 +71,7 @@ const dates = [
   { value: '30092019', label: '30 September 2019' },
 ]
 
-const ReservationForm = () => {
+const ReservationForm = ({location}) => {
   const { loading, error, data: airports_data } = useQuery(GET_AIRPORTS);
   let airports;
   if (!loading) {
@@ -78,6 +79,9 @@ const ReservationForm = () => {
     const renameValue = renameLabel.map(airport => renameProp('name', 'label', airport));
     airports = renameValue.map(airport => renameProp('code', 'value', airport))
   }
+
+  const defaultOrigin = queryString.parse(location.search).origin || 'WAW';
+
   return (
     <MainColumn>
       <Formik
@@ -86,7 +90,7 @@ const ReservationForm = () => {
           console.log(values);
         }}
         initialValues={{
-          origin: 'WAW',
+          origin: defaultOrigin,
           destination: '',
           departureDate: '',
           returnDate: '',

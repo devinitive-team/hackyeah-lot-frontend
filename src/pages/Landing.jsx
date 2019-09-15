@@ -5,7 +5,6 @@ import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { Link } from 'react-router-dom';
 
-
 import Card from 'react-bootstrap/Card';
 
 import MainColumn from '../components/MainColumn';
@@ -33,6 +32,7 @@ const GET_ADVERTS = gql`
       category
       code
       description
+      imagesBig
     }
   }
 `;
@@ -58,9 +58,10 @@ const Landing = () => {
             {ads
               .filter(ad => ad.category === category || category === 'All')
               .map(ad => (
-                <LinkStyled to={`reservation/${ad.code}`}>
+                <LinkStyled to={`reservation/?origin=${ad.code}`}>
                   <CardStyled key={ad.id}>
-                    <Card.Title>{ad.name}</Card.Title>
+                    <Card.Img variant="down" src={`${ad.imagesBig[0]}`} />
+                    <Card.Title style={{'marginTop': 10}}>{ad.name}</Card.Title>
                     <Card.Text>{ad.description}</Card.Text>
                   </CardStyled>
                 </LinkStyled>

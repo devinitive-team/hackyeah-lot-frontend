@@ -13,7 +13,7 @@ import TabPane, { Tab } from '../components/TabPane';
 
 const CardStyled = styled(Card)`
   padding: 15px;
-  margin-bottom: 20px;
+  margin-top: 20px;
 `;
 
 const LinkStyled = styled(Link)`

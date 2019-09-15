@@ -10,25 +10,21 @@ const TabLabel = styled.div`
   padding: 8px 10px;
   color: ${({ active, theme }) => (active ? '#fff' : theme.color.primary)};
   min-width: 60px;
-  height: 50px;
-  line-height: 33px;
+  height: 35px;
+  line-height: 19px;
   text-align: center;
   background: ${({ active, theme }) => (active ? theme.color.primary : '#fff')};
   transition: all 250ms ease-in;
-  border-top: ${({theme}) => theme.border};
-  border-bottom: ${({theme}) => theme.border};
+  border: none;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   user-select: none;
-  
+  margin: 20px 8px 0px 8px;
+  border-radius: 5px;
   &:first-child {
-    border-left: ${({theme}) => theme.border};
-    border-radius: 5px 0 0 5px;
-    padding-left: 16px;
+    margin-left: 0;
   }
   &:last-child {
-    border-right: ${({theme}) => theme.border};
-    border-radius: 0 5px 5px 0;
-    padding-right: 16px;
+    margin-right: 0;
   }
 `;
 

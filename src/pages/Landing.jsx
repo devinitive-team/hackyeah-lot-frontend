@@ -38,7 +38,7 @@ const GET_ADVERTS = gql`
 `
 
 const Landing = () => {
-  const { loading, error, data: adverts } = useQuery(GET_ADVERTS)
+  const { loading, data: adverts } = useQuery(GET_ADVERTS)
   let ads
 
   let categories = []

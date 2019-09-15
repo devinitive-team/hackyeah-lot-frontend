@@ -6,6 +6,6 @@ const Img = styled.img`
   height: 60px;
 `
 
-const Logo = () => <Img src={logo} />
+const Logo = () => <a href="/"><Img src={logo} alt="" /></a>
 
 export default Logo

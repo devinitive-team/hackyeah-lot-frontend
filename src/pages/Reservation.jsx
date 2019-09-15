@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Formik, Field } from 'formik'
 import Select from 'react-select'
 import * as yup from 'yup'
@@ -13,17 +12,11 @@ import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 
 import MainColumn from '../components/MainColumn'
+import Spinner from '../components/Spinner'
+import CenterDetails from '../components/CenterDetails'
 
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-
-const Wrapper = styled.section`
-  height: calc(100vh - 100px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`
 
 const schema = yup.object({
   origin: yup.string().required(),
@@ -55,9 +48,9 @@ const cabinClass = [
 
 const dates = [
   { value: '15092019', label: '15.09.2019' },
-  { value: '16092019', label: '15.09.2019' },
-  { value: '17092019', label: '15.09.2019' },
-  { value: '18092019', label: '15.09.2019' },
+  { value: '16092019', label: '16.09.2019' },
+  { value: '17092019', label: '17.09.2019' },
+  { value: '18092019', label: '18.09.2019' },
   { value: '19092019', label: '19.09.2019' },
   { value: '20092019', label: '20.09.2019' },
   { value: '21092019', label: '21.09.2019' },
@@ -88,6 +81,7 @@ const ReservationForm = ({ location, history }) => {
 
   const defaultDestination = queryString.parse(location.search).destination || ''
 
+  if (loading) return <Spinner />
   return (
     <MainColumn>
       <Formik
@@ -117,8 +111,8 @@ const ReservationForm = ({ location, history }) => {
         }}
       >
         {({ handleSubmit }) => (
-          <Wrapper>
-            <h2 style={{ marginBottom: 30 }}>Booking process</h2>
+          <CenterDetails>
+            <h2 style={{ marginBottom: 30 }}>Search for flights</h2>
             <Form style={{ width: 500 }} onSubmit={handleSubmit}>
               <Form.Row>
                 <Form.Group as={Col} controlId='validationFormikFlightOrigin'>
@@ -265,7 +259,7 @@ const ReservationForm = ({ location, history }) => {
               </Form.Row>
               <Button type='submit'>Search</Button>
             </Form>
-          </Wrapper>
+          </CenterDetails>
         )}
       </Formik>
     </MainColumn>

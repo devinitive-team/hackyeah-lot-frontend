@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Spinner from 'react-bootstrap/Spinner'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
@@ -9,6 +8,7 @@ import Card from 'react-bootstrap/Card'
 
 import MainColumn from '../components/MainColumn'
 import TabPane, { Tab } from '../components/TabPane'
+import Spinner from '../components/Spinner'
 
 const CardStyled = styled(Card)`
   padding: 15px;
@@ -39,11 +39,8 @@ const GET_ADVERTS = gql`
 
 const Landing = () => {
   const { loading, data: adverts } = useQuery(GET_ADVERTS)
-  let ads
+  let ads, categories = [], categoriesUnique
 
-  let categories = []
-
-  let categoriesUnique
   if (!loading) {
     ads = adverts.cities.filter(ad => ad.name !== '' && ad.category !== null)
     ads.forEach(ad => categories.push(ad.category))
@@ -52,7 +49,7 @@ const Landing = () => {
     categoriesUnique.push('All')
   }
 
-  if (loading) return <Spinner animation='grow' />
+  if (loading) return <Spinner />
 
   return (
     <MainColumn>

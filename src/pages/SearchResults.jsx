@@ -18,27 +18,59 @@ import gql from 'graphql-tag'
 //   }
 // `
 
-const FETCH_FLIGHTS = gql`
-  query Flights($origin: String!, $destination: String!, $departureDate: String!, $cabinClass: String!, $market: String!, $tripType: String!, $adt: Int!) {
-    flights(adt: 7, cabinClass: "E", departureDate: "17092019", destination: "AMS", origin: "WAW", returnDate: "18092019", tripType: "R", market: "PL") {
-      offerId
-      totalPrice {
-        price
-        basePrice
-        tax
-        currency
-      }
-      url
-      }
-      `;
+const GET_ADVERTS = gql`
+    {
+        cities {
+            id
+            name
+            category
+            code
+            description
+            imagesBig
+        }
+    }
+`
+
+const GET_FLIGHTS = gql`
+    query Flights($origin: String!, $destination: String!, $departureDate: String!, $cabinClass: String!, $market: String!, $tripType: String!, $adt: Int!, $returnDate: String) {
+        flights(origin: $origin, destination: $destination, departureDate: $departureDate, cabinClass: $cabinClass, market: $market, tripType: $tripType, adt: $adt, returnDate: $returnDate) {
+            offerId
+            totalPrice {
+                price
+                basePrice
+            }
+            outbound {
+                duration
+                segments {
+                    idInfoSegment
+                }
+            }
+            inbound {
+                duration
+                segments {
+                    idInfoSegment
+                }
+            }
+            url
+        }
+    }
+`;
       
 const SearchResults = ({location}) => {
   const queryParams = queryString.parse(location.search) || null
   queryParams.market = 'PL';
-  const {loading, error, data } = useQuery(FETCH_FLIGHTS, {
-    variables: {...queryParams},
-  });
+  const {adt, ...rest} = queryParams;
+  const opts = {
+    variables: {...rest, adt: parseInt(adt, 10)},
+  }
 
+  console.log(opts)
+  const { data, loading, error } = useQuery(
+    GET_FLIGHTS,
+    { variables: {...rest, adt: parseInt(adt, 10)} }
+  );
+
+  if (error) console.error(error)
   if(!loading) console.log(data)
 
   return (

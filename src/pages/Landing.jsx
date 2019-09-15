@@ -58,7 +58,7 @@ const Landing = () => {
             {ads
               .filter(ad => ad.category === category || category === 'All')
               .map(ad => (
-                <LinkStyled to={`reservation/?origin=${ad.code}`}>
+                <LinkStyled to={`reservation/?destination=${ad.code}`}>
                   <CardStyled key={ad.id}>
                     <Card.Img variant="down" src={`${ad.imagesBig[0]}`} />
                     <Card.Title style={{'marginTop': 10}}>{ad.name}</Card.Title>

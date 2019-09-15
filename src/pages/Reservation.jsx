@@ -80,7 +80,7 @@ const ReservationForm = ({location}) => {
     airports = renameValue.map(airport => renameProp('code', 'value', airport))
   }
 
-  const defaultOrigin = queryString.parse(location.search).origin || 'WAW';
+  const defaultDestination = queryString.parse(location.search).destination || '';
 
   return (
     <MainColumn>
@@ -90,8 +90,8 @@ const ReservationForm = ({location}) => {
           console.log(values);
         }}
         initialValues={{
-          origin: defaultOrigin,
-          destination: '',
+          origin: 'WAW',
+          destination: defaultDestination,
           departureDate: '',
           returnDate: '',
           tripType: 'R',

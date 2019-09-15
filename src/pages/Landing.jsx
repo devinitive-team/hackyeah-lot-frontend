@@ -1,13 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
 import Spinner from 'react-bootstrap/Spinner';
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import { Link } from 'react-router-dom';
+
 
 import Card from 'react-bootstrap/Card';
 
 import MainColumn from '../components/MainColumn';
 import TabPane, { Tab } from '../components/TabPane';
+
+const CardStyled = styled(Card)`
+  padding: 15px;
+  margin-bottom: 20px;
+`;
+
+const LinkStyled = styled(Link)`
+  color: #000;
+  &:hover {
+    text-decoration: none;
+    background-color: ${({theme}) => theme.color.primary};
+    opacity: 0.7;
+  }
+`;
 
 const GET_ADVERTS = gql`
   {
@@ -15,6 +31,7 @@ const GET_ADVERTS = gql`
       id
       name
       category
+      code
       description
     }
   }
@@ -28,6 +45,7 @@ const Landing = () => {
     ads.forEach(ad => categories.push(ad.category));
     const categoriesSet = new Set(categories);
     categoriesUnique = [...categoriesSet];
+    categoriesUnique.push('All');
   }
 
   if (loading) return <Spinner animation="grow" />;
@@ -37,24 +55,20 @@ const Landing = () => {
       <TabPane>
         {categoriesUnique.map(category => (
           <Tab key={category} title={category}> 
-            {ads.filter(ad => ad.category === category).map(ad => (
-                <Card key={ad.id}>
-                  <Card.Title>{ad.name}</Card.Title>
-                  <Card.Text>{ad.description}</Card.Text>
-                </Card>
+            {ads
+              .filter(ad => ad.category === category || category === 'All')
+              .map(ad => (
+                <LinkStyled to={`reservation/${ad.code}`}>
+                  <CardStyled key={ad.id}>
+                    <Card.Title>{ad.name}</Card.Title>
+                    <Card.Text>{ad.description}</Card.Text>
+                  </CardStyled>
+                </LinkStyled>
               )
             )}
           </Tab>
         ))}
-        {/* <Tab title="All">
-          {ads.map(ad => (
-            <Card key={ad.id}>
-              <Card.Title>{ad.name}</Card.Title>
-              <Card.Text>{ad.description}</Card.Text>
-            </Card>
-            )
-          )}
-        </Tab> */}
+
       </TabPane>
     </MainColumn>
   );

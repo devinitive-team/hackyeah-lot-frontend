@@ -12,22 +12,24 @@ const Nav = styled.nav`
   flex-direction: row;
   width: 100vw;
   align-items: center;
-  height: 60px;
+  height: 100px;
   border-bottom: ${({theme}) => theme.border};
 `;
 
 const Wrapper = styled.div`
-  width: 960px;
+  width: 100vw;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const InputGroupStyled = styled(InputGroup)`
+
   margin-bottom: 0 !important;
   margin-left: 40px;
-  width: 300px;
+  width: 400px;
 `;
 
 const Navbar = () => (

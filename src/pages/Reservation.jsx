@@ -54,21 +54,21 @@ const cabinClass = [
 ]
 
 const dates = [
-  { value: '15092019', label: '15 September 2019' },
-  { value: '16092019', label: '16 September 2019' },
-  { value: '17092019', label: '17 September 2019' },
-  { value: '18092019', label: '18 September 2019' },
-  { value: '19092019', label: '19 September 2019' },
-  { value: '20092019', label: '20 September 2019' },
-  { value: '21092019', label: '21 September 2019' },
-  { value: '22092019', label: '22 September 2019' },
-  { value: '23092019', label: '23 September 2019' },
-  { value: '25092019', label: '25 September 2019' },
-  { value: '26092019', label: '26 September 2019' },
-  { value: '27092019', label: '27 September 2019' },
-  { value: '28092019', label: '28 September 2019' },
-  { value: '29092019', label: '29 September 2019' },
-  { value: '30092019', label: '30 September 2019' }
+  { value: '15092019', label: '15.09.2019' },
+  { value: '16092019', label: '15.09.2019' },
+  { value: '17092019', label: '15.09.2019' },
+  { value: '18092019', label: '15.09.2019' },
+  { value: '19092019', label: '19.09.2019' },
+  { value: '20092019', label: '20.09.2019' },
+  { value: '21092019', label: '21.09.2019' },
+  { value: '22092019', label: '22.09.2019' },
+  { value: '23092019', label: '23.09.2019' },
+  { value: '25092019', label: '25.09.2019' },
+  { value: '26092019', label: '26.09.2019' },
+  { value: '27092019', label: '27.09.2019' },
+  { value: '28092019', label: '28.09.2019' },
+  { value: '29092019', label: '29.09.2019' },
+  { value: '30092019', label: '30.09.2019' }
 ]
 
 const adults = []

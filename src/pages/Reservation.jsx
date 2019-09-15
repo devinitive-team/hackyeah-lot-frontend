@@ -1,28 +1,29 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { Formik, Field } from 'formik';
-import Select from 'react-select';
-import * as yup from 'yup';
-import queryString from 'query-string';
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
+import { Formik, Field } from 'formik'
+import Select from 'react-select'
+import * as yup from 'yup'
+import queryString from 'query-string'
+import { withRouter } from 'react-router-dom'
 
-import renameProp from '../utils/renameProp';
+import renameProp from '../utils/renameProp'
 
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Col from 'react-bootstrap/Col'
 
-import MainColumn from '../components/MainColumn';
+import MainColumn from '../components/MainColumn'
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 const schema = yup.object({
   origin: yup.string().required(),
-  destination: yup.string(),
+  destination: yup.string().required(),
   departureDate: yup.string().required(),
-  returnDate: yup.string().required(),  
-
+  returnDate: yup.string().required(),
+  adt: yup.number().required()
 
   // firstName: yup.string().required(),
   // lastName: yup.string().required(),
@@ -31,7 +32,7 @@ const schema = yup.object({
   // state: yup.string().required(),
   // zip: yup.string().required(),
   // terms: yup.bool().required(),
-});
+})
 
 const GET_AIRPORTS = gql`
   {
@@ -40,17 +41,17 @@ const GET_AIRPORTS = gql`
       code
     }
   }
-`;
+`
 
 const tripType = [
   { value: 'R', label: 'Round-trip flight' },
-  { value: 'O', label: 'One-way flight' },
+  { value: 'O', label: 'One-way flight' }
 ]
 
 const cabinClass = [
   { value: 'E', label: 'Economy' },
   { value: 'B', label: 'Business' },
-  { value: 'F', label: 'First' },
+  { value: 'F', label: 'First' }
 ]
 
 const dates = [
@@ -68,26 +69,43 @@ const dates = [
   { value: '27092019', label: '27 September 2019' },
   { value: '28092019', label: '28 September 2019' },
   { value: '29092019', label: '29 September 2019' },
-  { value: '30092019', label: '30 September 2019' },
+  { value: '30092019', label: '30 September 2019' }
 ]
 
-const ReservationForm = ({location}) => {
-  const { loading, error, data: airports_data } = useQuery(GET_AIRPORTS);
-  let airports;
+const adults = []
+const numbers = [...Array(10).keys()]
+numbers.map(n => adults.push({ value: n, label: n }))
+
+const ReservationForm = ({ location, history }) => {
+  const { loading, error, data: airports_data } = useQuery(GET_AIRPORTS)
+  let airports
   if (!loading) {
-    const renameLabel = airports_data.cities.filter(airport => airport.name !== "");
-    const renameValue = renameLabel.map(airport => renameProp('name', 'label', airport));
+    const renameLabel = airports_data.cities.filter(airport => airport.name !== '')
+    const renameValue = renameLabel.map(airport =>
+      renameProp('name', 'label', airport)
+    )
     airports = renameValue.map(airport => renameProp('code', 'value', airport))
   }
 
-  const defaultDestination = queryString.parse(location.search).destination || '';
+  const defaultDestination = queryString.parse(location.search).destination || ''
 
   return (
     <MainColumn>
       <Formik
         validationSchema={schema}
-        onSubmit={(values) => {
-          console.log(values);
+        onSubmit={values => {
+          const {
+            origin,
+            destination,
+            departureDate,
+            returnDate,
+            tripType,
+            cabinClass,
+            adt
+          } = values
+          history.push(
+            `/searchresults?origin=${origin}&destination=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&tripType=${tripType}&cabinClass=${cabinClass}&adt=${adt}`
+          )
         }}
         initialValues={{
           origin: 'WAW',
@@ -96,6 +114,7 @@ const ReservationForm = ({location}) => {
           returnDate: '',
           tripType: 'R',
           cabinClass: 'E',
+          adt: '1'
         }}
       >
         {({
@@ -105,85 +124,157 @@ const ReservationForm = ({location}) => {
           touched,
           isValid,
           setFieldValue,
-          errors,
+          errors
         }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Row>
-              <Form.Group as={Col} md="8" controlId="validationFormikFlightOrigin">
+              <Form.Group as={Col} md='8' controlId='validationFormikFlightOrigin'>
                 <Form.Label>From</Form.Label>
                 <Field
                   name='origin'
-                  render={({form, field}) => (
-                  <Select
-                    options={airports}
-                    value={airports ? airports.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={airports}
+                      value={
+                        airports
+                          ? airports.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
-              <Form.Group as={Col} md="8" controlId="validationFormikFlightDestination">
+              <Form.Group
+                as={Col}
+                md='8'
+                controlId='validationFormikFlightDestination'
+              >
                 <Form.Label>To</Form.Label>
                 <Field
                   name='destination'
-                  render={({form, field}) => (
-                  <Select
-                    options={airports}
-                    value={airports ? airports.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={airports}
+                      value={
+                        airports
+                          ? airports.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
             </Form.Row>
             <Form.Row>
-              <Form.Group as={Col} md="2" controlId="validationFormikDepartureDate">
+              <Form.Group as={Col} md='2' controlId='validationFormikDepartureDate'>
                 <Form.Label>Departure date</Form.Label>
                 <Field
                   name='departureDate'
-                  render={({form, field}) => (
-                  <Select
-                    options={dates}
-                    value={dates ? dates.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={dates}
+                      value={
+                        dates
+                          ? dates.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
-              <Form.Group as={Col} md="2" controlId="validationFormik">
+              <Form.Group as={Col} md='2' controlId='validationFormikReturnDate'>
                 <Form.Label>Return date</Form.Label>
                 <Field
                   name='returnDate'
-                  render={({form, field}) => (
-                  <Select
-                    options={dates}
-                    value={dates ? dates.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={dates}
+                      value={
+                        dates
+                          ? dates.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
-              <Form.Group as={Col} md="2" controlId="validationFormikDepartureDate">
+              <Form.Group as={Col} md='2' controlId='validationFormikTripType'>
                 <Form.Label>Trip type</Form.Label>
                 <Field
                   name='tripType'
-                  render={({form, field}) => (
-                  <Select
-                    options={tripType}
-                    value={tripType ? tripType.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={tripType}
+                      value={
+                        tripType
+                          ? tripType.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
-              <Form.Group as={Col} md="2" controlId="validationFormikDepartureDate">
+              <Form.Group as={Col} md='2' controlId='validationFormikCabinClass'>
                 <Form.Label>Cabin class</Form.Label>
                 <Field
                   name='cabinClass'
-                  render={({form, field}) => (
-                  <Select
-                    options={cabinClass}
-                    value={cabinClass ? cabinClass.find(option => option.value === field.value) : ''}
-                    onChange={(option) => form.setFieldValue(field.name, option.value)}
-                  />)}
+                  render={({ form, field }) => (
+                    <Select
+                      options={cabinClass}
+                      value={
+                        cabinClass
+                          ? cabinClass.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
                 />
               </Form.Group>
             </Form.Row>
+            <Form.Row>
+              <Form.Group
+                as={Col}
+                md='4'
+                controlId='validationFormikNumberOfPassangers'
+              >
+                <Form.Label>Number of passangers</Form.Label>
+                <Field
+                  name='adt'
+                  render={({ form, field }) => (
+                    <Select
+                      options={adults}
+                      value={
+                        adults
+                          ? adults.find(option => option.value === field.value)
+                          : ''
+                      }
+                      onChange={option =>
+                        form.setFieldValue(field.name, option.value)
+                      }
+                    />
+                  )}
+                />
+              </Form.Group>
+            </Form.Row>
+            <Button type='submit'>Search</Button>
             {/* <Form.Row>
               <Form.Group as={Col} md="4" controlId="validationFormik01">
                 <Form.Label>First name</Form.Label>
@@ -286,13 +377,11 @@ const ReservationForm = ({location}) => {
                 id="validationFormik0"
               />
             </Form.Group> */}
-            <Button type="submit">Search</Button>
           </Form>
         )}
       </Formik>
     </MainColumn>
-  );
+  )
 }
 
-export default ReservationForm;
-
+export default withRouter(ReservationForm)

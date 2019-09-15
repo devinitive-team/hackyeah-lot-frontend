@@ -12,6 +12,12 @@ import Landing from './pages/Landing'
 import SearchResults from './pages/SearchResults'
 import Reservation from './pages/Reservation'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { faCheckSquare, faCoffee, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons'
+
+library.add(fab, faCheckSquare, faCoffee, faPlaneDeparture)
+
 const client = new ApolloClient({
   uri: 'https://hackyeah-backend.nommo.dev/graphql'
 })

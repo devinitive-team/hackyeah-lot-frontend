@@ -2,6 +2,12 @@ import React, { useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import queryString from 'query-string'
 import gql from 'graphql-tag'
+import Flight from '../components/Flight'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+
+
 
 // const FETCH_FLIGHTS = gql`
 //   query FetchFlights($origin: String!, $destination: String!, $departureDate: String!, $cabinClass: String!, $market: String!, $tripType: String!, $adt: Int!) {
@@ -42,13 +48,21 @@ const GET_FLIGHTS = gql`
             outbound {
                 duration
                 segments {
-                    idInfoSegment
+                    departureDate
+                    flightNumber
+                    operationCarrier
+                    arrivalAirport
+                    departureAirport
                 }
             }
             inbound {
                 duration
                 segments {
-                    idInfoSegment
+                    departureDate
+                    flightNumber
+                    operationCarrier
+                    arrivalAirport
+                    departureAirport
                 }
             }
             url
@@ -64,17 +78,27 @@ const SearchResults = ({location}) => {
     variables: {...rest, adt: parseInt(adt, 10)},
   }
 
-  console.log(opts)
+  console.log(queryParams)
   const { data, loading, error } = useQuery(
     GET_FLIGHTS,
     { variables: {...rest, adt: parseInt(adt, 10)} }
   );
 
   if (error) console.error(error)
-  if(!loading) console.log(data)
+  if(!loading) {
+    console.log(data);
+  }
 
   return (
-    <div>SearchResults</div>
+    <Container fluid={true}>
+      <Row>
+        {!loading && data.flights.map((el, i) => (
+          <Col md={6} className="my-3">
+            <Flight key={`flight-${i}`} flightData={el} meta={queryParams}/>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   )
 }
 export default SearchResults
